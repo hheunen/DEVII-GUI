@@ -1,9 +1,10 @@
-# rapport_screen.py
-
 from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.button import Button
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
+import os
 
 class RapportScreen(Screen):
     def __init__(self, animaux, name):
@@ -43,8 +44,34 @@ class RapportScreen(Screen):
         self.rapport_label.text = rapport
 
     def sauvegarder_pdf(self, instance):
-        # Fonctionnalité de sauvegarde à implémenter
-        print("Sauvegarder en PDF: Fonctionnalité non implémentée")
+        """Sauvegarde le rapport généré dans un fichier PDF."""
+        rapport = self.rapport_label.text
+        if not rapport:
+            print("Aucun rapport à sauvegarder.")
+            return
+
+        # Nom du fichier PDF
+        filename = "rapport_animaux.pdf"
+        
+        # Chemin complet (vous pouvez le personnaliser)
+        filepath = os.path.join(os.getcwd(), filename)
+        
+        # Création du PDF
+        c = canvas.Canvas(filepath, pagesize=A4)
+        width, height = A4
+
+        # Écriture du texte dans le PDF
+        c.drawString(100, height - 50, "Rapport des Soins des Animaux")
+        y_position = height - 80
+
+        for line in rapport.splitlines():
+            c.drawString(50, y_position, line)
+            y_position -= 15  # Déplace la prochaine ligne un peu plus bas
+
+        # Sauvegarde du fichier
+        c.save()
+
+        print(f"Rapport sauvegardé sous : {filepath}")
 
     def retour_menu(self, instance):
         # Cette méthode permet de revenir au menu principal
