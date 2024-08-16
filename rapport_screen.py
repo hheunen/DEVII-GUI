@@ -28,7 +28,7 @@ class RapportScreen(Screen):
         self.layout.add_widget(self.rapport_label)
 
         self.button_sauvegarder = Button(text='Sauvegarder en PDF')
-        self.button_sauvegarder.bind(on_press=self.sauvegarder_pdf)
+        self.button_sauvegarder.bind(on_press=self.create_pdf)
         self.layout.add_widget(self.button_sauvegarder)
         
         self.add_widget(self.layout)
