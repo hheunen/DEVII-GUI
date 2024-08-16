@@ -8,7 +8,7 @@ class MenuScreen(Screen):
     def __init__(self, name):
         super(MenuScreen, self).__init__(name=name)
         layout = BoxLayout(orientation='vertical')
-
+        
         # Bouton pour aller à l'écran d'ajout d'animaux
         button_ajout_animal = Button(text='Ajouter un Animal')
         button_ajout_animal.bind(on_press=self.go_to_ajout_animal)

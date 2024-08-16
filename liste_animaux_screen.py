@@ -11,6 +11,7 @@ class ListeAnimauxScreen(Screen):
         super().__init__(name=name)
         self.animaux = animaux
 
+        print(self.animaux)
         layout = BoxLayout(orientation='vertical')
 
         # Bouton pour revenir au menu principal

@@ -1,5 +1,3 @@
-# soins_screen.py
-
 from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.dropdown import DropDown
@@ -24,16 +22,8 @@ class SoinsScreen(Screen):
         label = Label(text="Gestion des Soins")
         layout.add_widget(label)
 
-        # Sélectionnezl l'animal
-        dropdown = DropDown()
-        for animal in self.animaux: # Pour créer chaque sélection
-            btn = Button(text=animal.pseudo, size_hint_y=None, height=44)
-            btn.bind(on_release=lambda btn: dropdown.select(btn.text))
-            dropdown.add_widget(btn)
-        
-        self.animal_spinner = Button(text=f'Sélectionnez un animal ({len(self.animaux)})', size_hint=(None, None), size=(1000, 50))
-        self.animal_spinner.bind(on_release=dropdown.open)
-        dropdown.bind(on_select=lambda instance, x: setattr(self.animal_spinner, 'text', x))
+        # Initialisation de l'animal_spinner, le Dropdown sera configuré dans on_pre_enter
+        self.animal_spinner = Button(text=f'Sélectionnez un animal', size_hint=(None, None), size=(1000, 50))
         layout.add_widget(self.animal_spinner)
 
         # Type de soin
@@ -57,6 +47,18 @@ class SoinsScreen(Screen):
         
         self.add_widget(layout)
 
+    def on_pre_enter(self):
+        """Cette méthode est appelée juste avant que l'écran devienne actif."""
+        dropdown = DropDown()
+        for animal in self.animaux:  # Pour créer chaque sélection
+            btn = Button(text=animal.pseudo, size_hint_y=None, height=44)
+            btn.bind(on_release=lambda btn: dropdown.select(btn.text))
+            dropdown.add_widget(btn)
+        
+        # Re-lier le bouton à l'ouverture du dropdown
+        self.animal_spinner.bind(on_release=dropdown.open)
+        dropdown.bind(on_select=lambda instance, x: setattr(self.animal_spinner, 'text', x))
+
     def ajouter_soin(self, instance):
         soin_type = self.soin_type_input.text
         details = self.details_input.text
@@ -70,6 +72,7 @@ class SoinsScreen(Screen):
             self.soin_type_input.text = ""
             self.details_input.text = ""
             self.animal_spinner.text = 'Sélectionner un animal'
+
 
     def retour_menu(self, instance):
         # Cette méthode permet de revenir au menu principal
