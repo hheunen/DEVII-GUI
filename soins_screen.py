@@ -24,7 +24,16 @@ class SoinsScreen(Screen):
         label = Label(text="Gestion des Soins")
         layout.add_widget(label)
 
-        self.animal_spinner = Button(text=f'Chargement...', size_hint=(None, None), size=(1000, 50))
+        # Sélectionnezl l'animal
+        dropdown = DropDown()
+        for animal in self.animaux: # Pour créer chaque sélection
+            btn = Button(text=animal.pseudo, size_hint_y=None, height=44)
+            btn.bind(on_release=lambda btn: dropdown.select(btn.text))
+            dropdown.add_widget(btn)
+        
+        self.animal_spinner = Button(text=f'Sélectionnez un animal ({len(self.animaux)})', size_hint=(None, None), size=(1000, 50))
+        self.animal_spinner.bind(on_release=dropdown.open)
+        dropdown.bind(on_select=lambda instance, x: setattr(self.animal_spinner, 'text', x))
         layout.add_widget(self.animal_spinner)
 
         # Type de soin
@@ -61,19 +70,6 @@ class SoinsScreen(Screen):
             self.soin_type_input.text = ""
             self.details_input.text = ""
             self.animal_spinner.text = 'Sélectionner un animal'
-    
-    def on_pre_enter(self):
-        # Sélectionnezl l'animal
-        dropdown = DropDown()
-        for animal in self.animaux: # Pour créer chaque sélection
-            btn = Button(text=animal.pseudo, size_hint_y=None, height=44)
-            btn.bind(on_release=lambda btn: dropdown.select(btn.text))
-            dropdown.add_widget(btn)
-        
-        animal_spinner = Button(text=f'Sélectionnez un animal ({len(self.animaux)})', size_hint=(None, None), size=(1000, 50))
-        animal_spinner.bind(on_release=dropdown.open)
-        dropdown.bind(on_select=lambda instance, x: setattr(animal_spinner, 'text', x))
-        self.animal_spinner = animal_spinner
 
     def retour_menu(self, instance):
         # Cette méthode permet de revenir au menu principal
