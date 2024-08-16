@@ -8,7 +8,7 @@ from kivy.uix.button import Button
 
 class ListeAnimauxScreen(Screen):
     def __init__(self, name, animaux):
-        super(ListeAnimauxScreen, self).__init__(name=name)
+        super().__init__(name=name)
         self.animaux = animaux
 
         layout = BoxLayout(orientation='vertical')
