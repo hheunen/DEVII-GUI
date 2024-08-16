@@ -14,6 +14,7 @@ class Animal:
 
     def ajouter_soin(self, soin: Soin):
         self.soins.append(soin)
+        print(self.soins[0].type_soin)
 
     def __str__(self):
         return f"Nom: {self.pseudo}, Type: {self.type}, Race: {self.race}, Âge: {self.age}, Régime: {self.regime}, État de santé: {self.etat_sante}"

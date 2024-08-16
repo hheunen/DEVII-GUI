@@ -6,4 +6,4 @@ class Soin:
         self.details = details
 
     def __str__(self):
-        return f"Type: {self.type_soin}, Détails: {self.details}"
+        return f"Type du soin = {self.type_soin}, Détails = {self.details}"

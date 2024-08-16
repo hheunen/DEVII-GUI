@@ -11,6 +11,7 @@ class SoinsScreen(Screen):
     def __init__(self, name, animaux):
         super().__init__(name=name)
         self.animaux = animaux
+        self.the_selected_animal= None
 
         layout = BoxLayout(orientation='vertical')
 
@@ -50,30 +51,40 @@ class SoinsScreen(Screen):
     def on_pre_enter(self):
         """Cette méthode est appelée juste avant que l'écran devienne actif."""
         dropdown = DropDown()
-        for animal in self.animaux:  # Pour créer chaque sélection
+        
+        for animal in self.animaux:
             btn = Button(text=animal.pseudo, size_hint_y=None, height=44)
-            btn.bind(on_release=lambda btn: dropdown.select(btn.text))
+            # On utilise un closure pour capturer la référence correcte d'animal
+            btn.bind(on_release=lambda btn, a=animal: self.select_animal(a, dropdown))
             dropdown.add_widget(btn)
         
         # Re-lier le bouton à l'ouverture du dropdown
         self.animal_spinner.bind(on_release=dropdown.open)
-        dropdown.bind(on_select=lambda instance, x: setattr(self.animal_spinner, 'text', x))
+
+    def select_animal(self, animal, dropdown):
+        """Cette méthode gère la sélection d'un animal depuis le dropdown."""
+        self.the_selected_animal = animal
+        self.animal_spinner.text = animal.pseudo
+        dropdown.dismiss()
 
     def ajouter_soin(self, instance):
         soin_type = self.soin_type_input.text
         details = self.details_input.text
-        selected_animal_str = self.animal_spinner.text
-        selected_animal = next((animal for animal in self.animaux if str(animal) == selected_animal_str), None)
+        selected_animal = self.the_selected_animal
 
         if soin_type and details and selected_animal:
             soin = Soin(soin_type, details)
             selected_animal.ajouter_soin(soin)
-            self.scroll_layout.add_widget(Label(text=f"{selected_animal.race}: {soin}", size_hint_y=None, height=40))
+            self.scroll_layout.add_widget(Label(text=f"L'animal {selected_animal.race} a : {soin}", size_hint_y=None, height=40))
             self.soin_type_input.text = ""
             self.details_input.text = ""
             self.animal_spinner.text = 'Sélectionner un animal'
+            self.the_selected_animal = None  # Réinitialiser la sélection après l'ajout
 
 
     def retour_menu(self, instance):
         # Cette méthode permet de revenir au menu principal
+        print(self.animaux)
+        print("-------")
+        print(self.animaux[0].soins)
         self.manager.current = 'menu'
